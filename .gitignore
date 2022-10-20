@@ -2,3 +2,5 @@
 node_modules --save
 .env
 node_modules
+backend/venv
+backend/__pycache__

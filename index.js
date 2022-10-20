@@ -4,6 +4,9 @@ const querystring = require("querystring"); //let us parse and stringigy query s
 const app = express();
 const axios = require("axios");
 const path = require("path");
+const cors = require("cors");
+let { PythonShell } = require("python-shell");
+
 // Priority serve any static files.
 
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -28,7 +31,7 @@ const generateRandomString = (length) => {
 
 const stateKey = "spotify_auth_state";
 
-app.use(express.static(path.resolve(__dirname, "./client/build")));
+app.use(cors());
 
 app.get("/login", (req, res) => {
   const state = generateRandomString(16);
@@ -108,18 +111,12 @@ app.get("/refresh_token", (req, res) => {
       ).toString("base64")}`,
     },
   })
-
     .then((response) => {
       res.send(response.data);
     })
     .catch((error) => {
       res.send(error);
     });
-});
-
-// All remaining requests return the React app, so it can handle routing.
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
 });
 
 app.listen(PORT, () => {
